@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-
     [SerializeField]
-    private float chaseFrequency;
-
+    private AudioSource birdUp;
+    [SerializeField]
+    private AudioSource buildUp;
+    [SerializeField]
+    private AudioSource baKaw;
     public enum Direction
     {
         NORTH,
@@ -23,71 +25,77 @@ public class EnemyMovement : MonoBehaviour
     private MazeGenerator mazeInfo;
     private CharacterController enemyControl;
     private GameObject player;
-    private float timeSinceChaseStart;
+    private PlayerMovement playerInfo;
+    private float timeSinceChaseStart, timeSinceBirdUp, timeSinceBaKaw;
     private float moveCheck;
     private Vector2 lastPosition;
     private Coroutine currentCoroutine;
     private float speed;
     private float chaseSpeed;
     private float findSpeed;
+    private float chaseFrequency;
 
-    private float soundOffset;
-    private float timeSinceSoundPlayed;
+    private float baKawOffset, baKawFrequency;
+    private Animator animator;
+
+    private DontDestroy PersistentData;
 
     private void Start()
     {
+        PersistentData = GameObject.FindWithTag("Persistent").GetComponent<DontDestroy>();
         mazeInfo = GameObject.FindWithTag("Maze").GetComponent<MazeGenerator>();
         player = GameObject.FindWithTag("Player");
-        transform.position = new Vector3((mazeInfo.numColumns - 1) * 6, 4, (mazeInfo.numRows - 1) * 6);
-        enemyControl = GetComponent<CharacterController>();
-        positionVariability = 0.2f;
-        timeSinceChaseStart = chaseFrequency;
-        moveCheck = 0;
-        timeSinceSoundPlayed = 0;
-        soundOffset = 1;
-        movePath = new Stack<Vector2Int>();
-        lastPosition = new Vector2();
-        nextPos = new Vector2();
-        switch(mazeInfo.difficulty)
+        playerInfo = player.GetComponent<PlayerMovement>();
+        animator = transform.GetChild(0).GetComponent<Animator>();
+        switch (mazeInfo.difficulty)
         {
             case MazeGenerator.Difficulty.EASY:
                 findSpeed = 5;
                 chaseSpeed = 8;
+                chaseFrequency = 15;
                 break;
             case MazeGenerator.Difficulty.MEDIUM:
                 findSpeed = 15;
                 chaseSpeed = 12;
+                chaseFrequency = 10;
                 break;
             case MazeGenerator.Difficulty.HARD:
                 findSpeed = 20;
                 chaseSpeed = 15;
+                chaseFrequency = 8;
                 break;
         }
         speed = findSpeed;
+        enemyControl = GetComponent<CharacterController>();
+        positionVariability = 0.2f;
+        timeSinceChaseStart = chaseFrequency;
+        timeSinceBirdUp = 10f;
+        moveCheck = 0;
+        timeSinceBaKaw = 0;
+        baKawFrequency = 1.5f;
+        baKawOffset = Random.Range(0.5f, baKawFrequency);
+        movePath = new Stack<Vector2Int>();
+        lastPosition = new Vector2();
+        nextPos = new Vector2();
+        animator.SetInteger("animState", 1);
     }
 
     private void Update()
     {
         timeSinceChaseStart += Time.deltaTime;
         moveCheck += Time.deltaTime;
-        timeSinceSoundPlayed += Time.deltaTime;
+        timeSinceBirdUp += Time.deltaTime;
+        timeSinceBaKaw += Time.deltaTime;
 
-        if (timeSinceChaseStart > chaseFrequency)
-        {
-            NewChase();
-        }
-
-        if (moveCheck > 0.5f)
+        if (moveCheck > 0.1f)
         {
             Vector2 curPos = new Vector2(transform.position.x, transform.position.z);
             if (curPos == lastPosition)
             {
-                Debug.Log("Correcting position");
                 Vector2Int curCell = WorldToMazePoint(curPos);
                 Vector2 newPos = MazeToWorldPoint(curCell);
-                Debug.Log(newPos);
-                transform.position = new Vector3(newPos.x, transform.position.y, newPos.y);
-                NewChase();
+                //transform.position = new Vector3(newPos.x, transform.position.y, newPos.y);
+                NewChase("Random");
             }
             lastPosition = new Vector2(transform.position.x, transform.position.z);
             moveCheck = 0;
@@ -100,29 +108,44 @@ public class EnemyMovement : MonoBehaviour
 
         if (Vector3.Distance(transform.position, player.transform.position) < 3f)
         {
-            Destroy(player);
             Destroy(this.gameObject);
+            PersistentData.LoadScene("Menu");
+            Cursor.visible = true;
         }
 
-        if(timeSinceSoundPlayed > soundOffset)
+        if (timeSinceBaKaw > baKawOffset)
         {
-            GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
-            timeSinceSoundPlayed = 0;
+            baKaw.PlayOneShot(baKaw.clip);
+            timeSinceBaKaw = 0;
+            baKawOffset = Random.Range(0.3f, 2f);
         }
     }
 
-    private void NewChase()
+    private void NewChase(string type)
     {
-        Debug.Log("New Chase");
+        ResetGrid();
         movePath.Clear();
-        movePath = GetPathToPlayer();
-        nextPos = MazeToWorldPoint(movePath.Peek());
+        Debug.Log("New Chase");
+
+        if (type.Equals("Random"))
+        {
+            speed = findSpeed;
+            movePath = GetPathToPoint(new Vector2Int(Random.Range(0, mazeInfo.numColumns), Random.Range(0, mazeInfo.numRows)));
+        }
+        else if (type.Equals("Player"))
+        {
+            speed = chaseSpeed;
+            movePath = GetPathToPoint(WorldToMazePoint(new Vector2(player.transform.position.x, player.transform.position.z)));
+        }
+
+        if (movePath.Count > 0)
+            nextPos = MazeToWorldPoint(movePath.Peek());
         timeSinceChaseStart = 0;
     }
 
     private Vector2Int WorldToMazePoint(Vector2 worldPos)
     {
-        return new Vector2Int((int)(worldPos.x / 6f), (int)(worldPos.y / 6f));
+        return new Vector2Int(Mathf.RoundToInt(worldPos.x / 6f), Mathf.RoundToInt(worldPos.y / 6f));
     }
 
     private Vector2 MazeToWorldPoint(Vector2Int mazeCell)
@@ -139,6 +162,7 @@ public class EnemyMovement : MonoBehaviour
         else
         {
             float moveX = 0, moveZ = 0;
+            float rotY = 0;
             if (Mathf.Abs(transform.position.x - pos.x) < positionVariability)
             {
                 moveX = 0;
@@ -146,10 +170,12 @@ public class EnemyMovement : MonoBehaviour
             else if (transform.position.x < pos.x)
             {
                 moveX = speed;
+                rotY = 90;
             }
             else
             {
                 moveX = -speed;
+                rotY = -90;
             }
 
             if (Mathf.Abs(transform.position.z - pos.y) < positionVariability)
@@ -159,10 +185,12 @@ public class EnemyMovement : MonoBehaviour
             else if (transform.position.z < pos.y)
             {
                 moveZ = speed;
+                rotY = 0;
             }
             else
             {
                 moveZ = -speed;
+                rotY = 180;
             }
 
             Vector3 movement = new Vector3(moveX, 0, moveZ);
@@ -172,124 +200,196 @@ public class EnemyMovement : MonoBehaviour
             movement *= Time.deltaTime;
             movement = transform.TransformDirection(movement);
             enemyControl.Move(movement);
+            transform.GetChild(0).localEulerAngles = Vector3.RotateTowards(transform.localEulerAngles, new Vector3(0, rotY, 0), 0.1f, 360f);
             return false;
         }
     }
 
-    private int GetPriority()
+    private int GetPriority(Vector2Int point)
     {
         Vector2Int curCell = WorldToMazePoint(new Vector2(transform.position.x, transform.position.z));
-        Vector2Int playerCell = WorldToMazePoint(new Vector2(player.transform.position.x, player.transform.position.z));
         int priority = 0;
-        if (curCell.x < playerCell.x)
+        if (curCell.x < point.x)
         {
-            if (curCell.y < playerCell.y)
+            if (curCell.y < point.y)
                 priority = 1;
             else
                 priority = 4;
         }
         else
         {
-            if (curCell.y < playerCell.y)
+            if (curCell.y < point.y)
                 priority = 2;
             else
                 priority = 3;
         }
-        Debug.Log(priority);
         return priority;
+    }
+
+    public Stack<int> GetCheckOrder(int priority)
+    {
+        // 1: North, 2: West, 3: South, 4: East
+        Stack<int> checkOrder = new Stack<int>();
+        switch (priority)
+        {
+            case 1:
+                if (Mathf.Max((Mathf.Abs(transform.position.x - player.transform.position.x)), (Mathf.Abs(transform.position.z - player.transform.position.z)))
+                    == (Mathf.Abs(transform.position.z - player.transform.position.z)))
+                {
+                    checkOrder.Push(3);
+                    checkOrder.Push(2);
+                    checkOrder.Push(4);
+                    checkOrder.Push(1);
+                }
+                else
+                {
+                    checkOrder.Push(2);
+                    checkOrder.Push(3);
+                    checkOrder.Push(1);
+                    checkOrder.Push(4);
+                }
+                break;
+            case 2:
+                if (Mathf.Max((Mathf.Abs(transform.position.x - player.transform.position.x)), (Mathf.Abs(transform.position.z - player.transform.position.z)))
+                    == (Mathf.Abs(transform.position.z - player.transform.position.z)))
+                {
+                    checkOrder.Push(3);
+                    checkOrder.Push(4);
+                    checkOrder.Push(2);
+                    checkOrder.Push(1);
+                }
+                else
+                {
+                    checkOrder.Push(4);
+                    checkOrder.Push(3);
+                    checkOrder.Push(1);
+                    checkOrder.Push(2);
+                }
+                break;
+            case 3:
+                if (Mathf.Max((Mathf.Abs(transform.position.x - player.transform.position.x)), (Mathf.Abs(transform.position.z - player.transform.position.z)))
+                    == (Mathf.Abs(transform.position.z - player.transform.position.z)))
+                {
+                    checkOrder.Push(1);
+                    checkOrder.Push(4);
+                    checkOrder.Push(2);
+                    checkOrder.Push(3);
+                }
+                else
+                {
+                    checkOrder.Push(4);
+                    checkOrder.Push(1);
+                    checkOrder.Push(3);
+                    checkOrder.Push(2);
+                }
+                break;
+            case 4:
+                if (Mathf.Max((Mathf.Abs(transform.position.x - player.transform.position.x)), (Mathf.Abs(transform.position.z - player.transform.position.z)))
+                    == (Mathf.Abs(transform.position.z - player.transform.position.z)))
+                {
+                    checkOrder.Push(1);
+                    checkOrder.Push(2);
+                    checkOrder.Push(4);
+                    checkOrder.Push(3);
+                }
+                else
+                {
+                    checkOrder.Push(2);
+                    checkOrder.Push(1);
+                    checkOrder.Push(3);
+                    checkOrder.Push(4);
+                }
+                break;
+            default:
+                checkOrder.Push(4);
+                checkOrder.Push(3);
+                checkOrder.Push(2);
+                checkOrder.Push(1);
+                break;
+        }
+        return checkOrder;
     }
 
     /**
      * Grid cells are pushed into the stack to create a path, popped out if it reaches a dead end.
-     * Ignore the fact that this one function is almost 200 lines long...not important...
      */
-    private Stack<Vector2Int> GetPathToPlayer()
+    private Stack<Vector2Int> GetPathToPoint(Vector2Int point)
     {
+        ResetGrid();
         Stack<Vector2Int> path = new Stack<Vector2Int>();
 
         SingleSpace[,] grid = CreateDeepCopyGrid(mazeInfo.grid);
 
         Vector2Int curCell = WorldToMazePoint(new Vector2(transform.position.x, transform.position.z));
-        Vector2Int playerCell = WorldToMazePoint(new Vector2(player.transform.position.x, player.transform.position.z));
         Vector2Int moveTo = curCell;
         grid[moveTo.x, moveTo.y].available = true;
+        path.Push(moveTo);
 
-        int priority = GetPriority();
+        int priority = GetPriority(point);
 
-        while (moveTo != playerCell)
+        while (moveTo != point)
         {
-            int random;
-            List<int> untestedCell = new List<int>(4);
-            if (!CheckPrioritizedPaths(priority, ref moveTo, ref grid, ref path))
+            bool validCell = false;
+            Stack<int> checkOrder = GetCheckOrder(priority);
+            while (!validCell)
             {
-                untestedCell.Clear();
-                for (int i = 0; i < 4; i++)
-                    untestedCell.Insert(i, i + 1);
-                bool validCell = false;
-                int range = 4;
-                while (!validCell)
+                if (checkOrder.Count > 0)
                 {
-                    if (untestedCell.Count > 0)
+                    int direction = checkOrder.Pop();
+                    switch (direction)
                     {
-                        random = Random.Range(0, range);
-                        int direction = untestedCell[random];
-                        untestedCell.RemoveAt(random);
-                        range--;
-                        switch (direction)
-                        {
-                            case 1:
-                                if (CheckNorth(moveTo, grid))
-                                {
-                                    validCell = true;
-                                    grid[moveTo.x, moveTo.y + 1].available = true;
-                                    moveTo.y++;
-                                    path.Push(moveTo);
-                                }
-                                break;
-                            case 2:
-                                if (CheckWest(moveTo, grid))
-                                {
-                                    validCell = true;
-                                    grid[moveTo.x - 1, moveTo.y].available = true;
-                                    moveTo.x--;
-                                    path.Push(moveTo);
-                                }
-                                break;
-                            case 3:
-                                if (CheckSouth(moveTo, grid))
-                                {
-                                    validCell = true;
-                                    grid[moveTo.x, moveTo.y - 1].available = true;
-                                    moveTo.y--;
-                                    path.Push(moveTo);
-                                }
-                                break;
-                            case 4:
-                                if (CheckEast(moveTo, grid))
-                                {
-                                    validCell = true;
-                                    grid[moveTo.x + 1, moveTo.y].available = true;
-                                    moveTo.x++;
-                                    path.Push(moveTo);
-                                }
-                                break;
-                            default:
-                                Debug.Log("Random out of range");
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        path = Backtrack(grid, path);
-                        moveTo = path.Peek();
-                        validCell = true;
+                        case 1:
+                            if (CheckNorth(moveTo, grid))
+                            {
+                                validCell = true;
+                                grid[moveTo.x, moveTo.y + 1].available = true;
+                                moveTo.y++;
+                                path.Push(moveTo);
+                            }
+                            break;
+                        case 2:
+                            if (CheckWest(moveTo, grid))
+                            {
+                                validCell = true;
+                                grid[moveTo.x - 1, moveTo.y].available = true;
+                                moveTo.x--;
+                                path.Push(moveTo);
+                            }
+                            break;
+                        case 3:
+                            if (CheckSouth(moveTo, grid))
+                            {
+                                validCell = true;
+                                grid[moveTo.x, moveTo.y - 1].available = true;
+                                moveTo.y--;
+                                path.Push(moveTo);
+                            }
+                            break;
+                        case 4:
+                            if (CheckEast(moveTo, grid))
+                            {
+                                validCell = true;
+                                grid[moveTo.x + 1, moveTo.y].available = true;
+                                moveTo.x++;
+                                path.Push(moveTo);
+                            }
+                            break;
+                        default:
+                            Debug.Log("Random out of range");
+                            break;
                     }
                 }
+                else
+                {
+                    path = Backtrack(grid, path);
+                    moveTo = path.Peek();
+                    validCell = true;
+                }
             }
+
         }
 
-        ResetGrid(); 
-
+        path.Push(point);
         // Reversing the order of the items in the stack
         Stack<Vector2Int> returnPath = new Stack<Vector2Int>();
         while (path.Count != 0)
@@ -301,170 +401,13 @@ public class EnemyMovement : MonoBehaviour
 
     private void ResetGrid()
     {
-        for(int i = 0; i < mazeInfo.numColumns; i++)
+        for (int i = 0; i < mazeInfo.numColumns; i++)
         {
-            for(int j = 0; j < mazeInfo.numRows; j++)
+            for (int j = 0; j < mazeInfo.numRows; j++)
             {
                 mazeInfo.grid[i, j].available = false;
             }
         }
-    }
-
-    private bool CheckPrioritizedPaths(int priority, ref Vector2Int check, ref SingleSpace[,] grid, ref Stack<Vector2Int> path)
-    {
-        bool completed = false;
-        switch (priority)
-        {
-            case 1:
-                if (Mathf.Max((Mathf.Abs(transform.position.x - player.transform.position.x)), (Mathf.Abs(transform.position.z - player.transform.position.z)))
-                    == (Mathf.Abs(transform.position.z - player.transform.position.z)))
-                {
-                    if (CheckNorth(check, grid) && !completed)
-                    {
-                        grid[check.x, check.y + 1].available = true;
-                        check.y++;
-                        completed = true;
-                        path.Push(check);
-                    }
-                    if (CheckEast(check, grid) && !completed)
-                    {
-                        grid[check.x + 1, check.y].available = true;
-                        check.x++;
-                        completed = true;
-                        path.Push(check);
-                    }
-                }
-                else
-                {
-                    if (CheckEast(check, grid) && !completed)
-                    {
-                        grid[check.x + 1, check.y].available = true;
-                        check.x++;
-                        completed = true;
-                        path.Push(check);
-                    }
-                    if (CheckNorth(check, grid) && !completed)
-                    {
-                        grid[check.x, check.y + 1].available = true;
-                        check.y++;
-                        completed = true;
-                        path.Push(check);
-                    }
-                }
-                break;
-            case 2:
-                if (Mathf.Max((Mathf.Abs(transform.position.x - player.transform.position.x)), (Mathf.Abs(transform.position.z - player.transform.position.z)))
-                    == (Mathf.Abs(transform.position.z - player.transform.position.z)))
-                {
-                    if (CheckNorth(check, grid) && !completed)
-                    {
-                        grid[check.x, check.y + 1].available = true;
-                        check.y++;
-                        completed = true;
-                        path.Push(check);
-                    }
-                    if (CheckWest(check, grid) && !completed)
-                    {
-                        grid[check.x - 1, check.y].available = true;
-                        check.x--;
-                        completed = true;
-                        path.Push(check);
-                    }
-                }
-                else
-                {
-                    if (CheckWest(check, grid) && !completed)
-                    {
-                        grid[check.x - 1, check.y].available = true;
-                        check.x--;
-                        completed = true;
-                        path.Push(check);
-                    }
-                    if (CheckNorth(check, grid) && !completed)
-                    {
-                        grid[check.x, check.y + 1].available = true;
-                        check.y++;
-                        completed = true;
-                        path.Push(check);
-                    }
-                }
-                break;
-            case 3:
-                if (Mathf.Max((Mathf.Abs(transform.position.x - player.transform.position.x)), (Mathf.Abs(transform.position.z - player.transform.position.z)))
-                    == (Mathf.Abs(transform.position.z - player.transform.position.z)))
-                {
-                    if (CheckSouth(check, grid) && !completed)
-                    {
-                        grid[check.x, check.y - 1].available = true;
-                        check.y--;
-                        completed = true;
-                        path.Push(check);
-                    }
-                    if (CheckWest(check, grid) && !completed)
-                    {
-                        grid[check.x - 1, check.y].available = true;
-                        check.x--;
-                        completed = true;
-                        path.Push(check);
-                    }
-                }
-                else
-                {
-                    if (CheckWest(check, grid) && !completed)
-                    {
-                        grid[check.x - 1, check.y].available = true;
-                        check.x--;
-                        completed = true;
-                        path.Push(check);
-                    }
-                    if (CheckSouth(check, grid) && !completed)
-                    {
-                        grid[check.x, check.y - 1].available = true;
-                        check.y--;
-                        completed = true;
-                        path.Push(check);
-                    }
-                }
-                break;
-            case 4:
-                if (Mathf.Max((Mathf.Abs(transform.position.x - player.transform.position.x)), (Mathf.Abs(transform.position.z - player.transform.position.z)))
-                    == (Mathf.Abs(transform.position.z - player.transform.position.z)))
-                {
-                    if (CheckSouth(check, grid) && !completed)
-                    {
-                        grid[check.x, check.y - 1].available = true;
-                        check.y--;
-                        completed = true;
-                        path.Push(check);
-                    }
-                    if (CheckEast(check, grid) && !completed)
-                    {
-                        grid[check.x + 1, check.y].available = true;
-                        check.x++;
-                        completed = true;
-                        path.Push(check);
-                    }
-                }
-                else
-                {
-                    if (CheckEast(check, grid) && !completed)
-                    {
-                        grid[check.x + 1, check.y].available = true;
-                        check.x++;
-                        completed = true;
-                        path.Push(check);
-                    }
-                    if (CheckSouth(check, grid) && !completed)
-                    {
-                        grid[check.x, check.y - 1].available = true;
-                        check.y--;
-                        completed = true;
-                        path.Push(check);
-                    }
-                }
-                break;
-        }
-        return completed;
     }
 
     private bool CheckNorth(Vector2Int checkCell, SingleSpace[,] grid)
@@ -577,6 +520,13 @@ public class EnemyMovement : MonoBehaviour
                 nextPos = MazeToWorldPoint(movePath.Pop());
             return;
         }
+        else
+        {
+            if (speed == chaseSpeed)
+                NewChase("Player");
+            else
+                NewChase("Random");
+        }
     }
 
     private SingleSpace[,] CreateDeepCopyGrid(SingleSpace[,] copyFrom)
@@ -594,29 +544,18 @@ public class EnemyMovement : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && !playerInfo.isCrouching)
         {
+            if (timeSinceBirdUp > 3f)
+            {
+                birdUp.PlayOneShot(birdUp.clip);
+                timeSinceBirdUp = 0;
+                baKawFrequency = 0.75f;
+            }
+            if (!buildUp.isPlaying)
+                buildUp.PlayOneShot(buildUp.clip);
             speed = chaseSpeed;
-            soundOffset /= 2;
-            NewChase();
-        }
-    }
-
-    public void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            if (timeSinceChaseStart > 2f)
-                NewChase();
-        }
-    }
-
-    public void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Player")
-        {
-            chaseSpeed = findSpeed;
-            soundOffset *= 2;
+            animator.SetInteger("animState", 3);
         }
     }
 }

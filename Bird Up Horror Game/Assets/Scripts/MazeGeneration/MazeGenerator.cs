@@ -11,6 +11,9 @@ public class MazeGenerator : MonoBehaviour
     public int numColumns;
     public SingleSpace[,] grid;
 
+    private GameObject player;
+    private GameObject enemy;
+
     public enum Difficulty
     {
         EASY,
@@ -22,7 +25,6 @@ public class MazeGenerator : MonoBehaviour
 
     private void Start()
     {
-
         switch(difficulty)
         {
             case Difficulty.EASY:
@@ -45,6 +47,10 @@ public class MazeGenerator : MonoBehaviour
         grid = new SingleSpace[numColumns, numRows];
         CreateBaseGrid();
         GenerateMaze();
+        player = GameObject.FindWithTag("Player");
+        enemy = GameObject.FindWithTag("Enemy");
+        player.transform.position = new Vector3((numColumns / 2) * 6f, 4f, (numRows / 2) * 6f);
+        enemy.transform.position = new Vector3((numColumns - 1) * 6f, 4f, (numRows - 1) * 6f);
     }
 
     /**
@@ -86,6 +92,21 @@ public class MazeGenerator : MonoBehaviour
                     grid[i, j].northWall.transform.position = new Vector3(i * 6, 3, (j * 6) + 3);
                     grid[i, j].northWall.transform.localEulerAngles = new Vector3(0, 90, 0);
                     grid[i, j].northWall.name = "NorthWall: " + i + " , " + j;
+                }
+
+                // Offsetting the scale of every other row/column to keep the walls from causing visual glitches by overlapping each other
+                if(i % 2 == 0)
+                {
+                    if (grid[i, j].northWall)
+                        grid[i, j].northWall.transform.localScale = new Vector3(0.99f, 6, 7);
+                    grid[i, j].southWall.transform.localScale = new Vector3(0.99f, 6, 7);
+                }
+
+                if(j % 2 == 0)
+                {
+                    if (grid[i, j].westWall)
+                        grid[i, j].westWall.transform.localScale = new Vector3(0.99f, 6, 7);
+                    grid[i, j].eastWall.transform.localScale = new Vector3(0.99f, 6, 7);
                 }
             }
         }

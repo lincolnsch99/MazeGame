@@ -60,31 +60,37 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\CameraCollision.cs" />
     <Compile Include="Assets\Scripts\Activations.cs" />
+    <Compile Include="Assets\Scripts\AnimationControl.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
+    <Compile Include="Assets\Scripts\DontDestroy.cs" />
     <Compile Include="Assets\Scripts\EnemyController.cs" />
     <Compile Include="Assets\Scripts\EnemyMovement.cs" />
+    <Compile Include="Assets\Scripts\GameData.cs" />
     <Compile Include="Assets\Scripts\Layer.cs" />
     <Compile Include="Assets\Scripts\Manager.cs" />
     <Compile Include="Assets\Scripts\MazeGeneration\MazeGenerator.cs" />
     <Compile Include="Assets\Scripts\MazeGeneration\SingleSpace.cs" />
+    <Compile Include="Assets\Scripts\MenuButtons.cs" />
     <Compile Include="Assets\Scripts\NeuralNetwork.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\SaveData.cs" />
     <Compile Include="Assets\Scripts\Vector.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/UnityProjects/2018.3.12f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -288,16 +294,16 @@
       <HintPath>C:/UnityProjects/2018.3.12f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="MathNet.Numerics">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Assets/Plugins/MathNet.Numerics.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Assets/Plugins/MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Tracker">
-      <HintPath>C:/UnityProjects/Bird Up Horror Game/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
+      <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
       <HintPath>C:/UnityProjects/2018.3.12f1/Editor/Data/NetStandard/ref/2.0.0/netstandard.dll</HintPath>

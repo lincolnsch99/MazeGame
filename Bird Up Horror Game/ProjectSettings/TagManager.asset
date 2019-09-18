@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Maze
   - Structure
+  - Enemy
+  - Key
+  - Persistent
+  - LoadScreen
+  - LoadScreenSlider
   layers:
   - Default
   - TransparentFX

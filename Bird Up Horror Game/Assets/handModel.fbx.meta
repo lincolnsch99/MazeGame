@@ -1,0 +1,242 @@
+fileFormatVersion: 2
+guid: bbe8836ad8140364b8bde9616e9a8c7d
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: Armature
+    100002: //RootNode
+    100004: hands_all
+    100006: LeftBicep.L
+    100008: LeftBicep.R
+    100010: LeftCollarbone.L
+    100012: LeftCollarbone.R
+    100014: LeftForearm.L
+    100016: LeftForearm.R
+    100018: LeftIndex1.L
+    100020: LeftIndex1.R
+    100022: LeftIndex2.L
+    100024: LeftIndex2.R
+    100026: LeftIndex3.L
+    100028: LeftIndex3.R
+    100030: LeftIndex4.L
+    100032: LeftIndex4.L_end
+    100034: LeftIndex4.R
+    100036: LeftIndex4.R_end
+    100038: LeftMiddle1.L
+    100040: LeftMiddle1.R
+    100042: LeftMiddle2.L
+    100044: LeftMiddle2.R
+    100046: LeftMiddle3.L
+    100048: LeftMiddle3.R
+    100050: LeftMiddle4.L
+    100052: LeftMiddle4.L_end
+    100054: LeftMiddle4.R
+    100056: LeftMiddle4.R_end
+    100058: LeftPinky1.L
+    100060: LeftPinky1.R
+    100062: LeftPinky2.L
+    100064: LeftPinky2.R
+    100066: LeftPinky3.L
+    100068: LeftPinky3.R
+    100070: LeftPinky4.L
+    100072: LeftPinky4.L_end
+    100074: LeftPinky4.R
+    100076: LeftPinky4.R_end
+    100078: LeftRing1.L
+    100080: LeftRing1.R
+    100082: LeftRing2.L
+    100084: LeftRing2.R
+    100086: LeftRing3.L
+    100088: LeftRing3.R
+    100090: LeftRing4.L
+    100092: LeftRing4.L_end
+    100094: LeftRing4.R
+    100096: LeftRing4.R_end
+    100098: LeftThumb1.L
+    100100: LeftThumb1.R
+    100102: LeftThumb2.L
+    100104: LeftThumb2.R
+    100106: LeftThumb3.L
+    100108: LeftThumb3.L_end
+    100110: LeftThumb3.R
+    100112: LeftThumb3.R_end
+    100114: Spine
+    100116: Spine_end
+    400000: Armature
+    400002: //RootNode
+    400004: hands_all
+    400006: LeftBicep.L
+    400008: LeftBicep.R
+    400010: LeftCollarbone.L
+    400012: LeftCollarbone.R
+    400014: LeftForearm.L
+    400016: LeftForearm.R
+    400018: LeftIndex1.L
+    400020: LeftIndex1.R
+    400022: LeftIndex2.L
+    400024: LeftIndex2.R
+    400026: LeftIndex3.L
+    400028: LeftIndex3.R
+    400030: LeftIndex4.L
+    400032: LeftIndex4.L_end
+    400034: LeftIndex4.R
+    400036: LeftIndex4.R_end
+    400038: LeftMiddle1.L
+    400040: LeftMiddle1.R
+    400042: LeftMiddle2.L
+    400044: LeftMiddle2.R
+    400046: LeftMiddle3.L
+    400048: LeftMiddle3.R
+    400050: LeftMiddle4.L
+    400052: LeftMiddle4.L_end
+    400054: LeftMiddle4.R
+    400056: LeftMiddle4.R_end
+    400058: LeftPinky1.L
+    400060: LeftPinky1.R
+    400062: LeftPinky2.L
+    400064: LeftPinky2.R
+    400066: LeftPinky3.L
+    400068: LeftPinky3.R
+    400070: LeftPinky4.L
+    400072: LeftPinky4.L_end
+    400074: LeftPinky4.R
+    400076: LeftPinky4.R_end
+    400078: LeftRing1.L
+    400080: LeftRing1.R
+    400082: LeftRing2.L
+    400084: LeftRing2.R
+    400086: LeftRing3.L
+    400088: LeftRing3.R
+    400090: LeftRing4.L
+    400092: LeftRing4.L_end
+    400094: LeftRing4.R
+    400096: LeftRing4.R_end
+    400098: LeftThumb1.L
+    400100: LeftThumb1.R
+    400102: LeftThumb2.L
+    400104: LeftThumb2.R
+    400106: LeftThumb3.L
+    400108: LeftThumb3.L_end
+    400110: LeftThumb3.R
+    400112: LeftThumb3.R_end
+    400114: Spine
+    400116: Spine_end
+    2100000: lambert1
+    4300000: hands_all
+    7400000: Armature|ArmatureAction
+    9500000: //RootNode
+    13700000: hands_all
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature|ArmatureAction
+      takeName: Armature|ArmatureAction
+      firstFrame: 0
+      lastFrame: 39
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
