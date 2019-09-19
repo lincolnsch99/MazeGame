@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\CameraCollision.cs" />
+    <Compile Include="Assets\DifficultySettings.cs" />
+    <Compile Include="Assets\Rock.cs" />
     <Compile Include="Assets\Scripts\Activations.cs" />
     <Compile Include="Assets\Scripts\AnimationControl.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />

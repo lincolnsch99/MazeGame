@@ -5,9 +5,9 @@ OcclusionCullingSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_OcclusionBakeSettings:
-    smallestOccluder: 5
+    smallestOccluder: 3
     smallestHole: 0.25
-    backfaceThreshold: 100
+    backfaceThreshold: 59
   m_SceneGUID: 00000000000000000000000000000000
   m_OcclusionCullingData: {fileID: 0}
 --- !u!104 &2
@@ -155,4 +155,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d937de2267a7d14ea29a0ef40a0b294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scores: []
+  mazesRan: 0
+  mazesEscaped: 0
+  rocksFound: 0
+  mazeNumRows: 0
+  mazeNumColumns: 0
+  numRocks: 0
+  enemyChaseSpeed: 0
+  enemySearchSpeed: 0

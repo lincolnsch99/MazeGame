@@ -6,6 +6,7 @@ public class MazeGenerator : MonoBehaviour
 {
     public GameObject wallPrefab;
     public GameObject floorPrefab;
+    public GameObject rockPrefab;
 
     public int numRows;
     public int numColumns;
@@ -13,44 +14,21 @@ public class MazeGenerator : MonoBehaviour
 
     private GameObject player;
     private GameObject enemy;
-
-    public enum Difficulty
-    {
-        EASY,
-        MEDIUM,
-        HARD
-    }
-
-    public Difficulty difficulty;
+    private DontDestroy PersistentData;
 
     private void Start()
     {
-        switch(difficulty)
-        {
-            case Difficulty.EASY:
-                numColumns = 10;
-                numRows = 10;
-                break;
-            case Difficulty.MEDIUM:
-                numColumns = 20;
-                numRows = 20;
-                break;
-            case Difficulty.HARD:
-                numColumns = 35;
-                numRows = 35;
-                break;
-            default:
-                numColumns = 0;
-                numRows = 0;
-                break;
-        }
+        PersistentData = GameObject.FindWithTag("Persistent").GetComponent<DontDestroy>();
+        numRows = PersistentData.mazeNumRows;
+        numColumns = PersistentData.mazeNumColumns;
         grid = new SingleSpace[numColumns, numRows];
         CreateBaseGrid();
         GenerateMaze();
+        SpawnRocks();
         player = GameObject.FindWithTag("Player");
         enemy = GameObject.FindWithTag("Enemy");
-        player.transform.position = new Vector3((numColumns / 2) * 6f, 4f, (numRows / 2) * 6f);
-        enemy.transform.position = new Vector3((numColumns - 1) * 6f, 4f, (numRows - 1) * 6f);
+        player.transform.position = new Vector3((numColumns / 2) * 6f, 1f, (numRows / 2) * 6f);
+        enemy.transform.position = new Vector3((numColumns - 1) * 6f, 1f, (numRows - 1) * 6f);
     }
 
     /**
@@ -368,6 +346,14 @@ public class MazeGenerator : MonoBehaviour
         {
             GeneratePath((int)nextStartPoint.x, (int)nextStartPoint.y);
             nextStartPoint = FindNextStartPoint();
+        }
+    }
+
+    private void SpawnRocks()
+    {
+        for(int i = 0; i < PersistentData.numRocks; i++)
+        {
+            GameObject.Instantiate(rockPrefab);
         }
     }
 }

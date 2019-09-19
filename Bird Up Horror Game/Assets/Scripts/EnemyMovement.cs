@@ -47,24 +47,11 @@ public class EnemyMovement : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerInfo = player.GetComponent<PlayerMovement>();
         animator = transform.GetChild(0).GetComponent<Animator>();
-        switch (mazeInfo.difficulty)
-        {
-            case MazeGenerator.Difficulty.EASY:
-                findSpeed = 5;
-                chaseSpeed = 8;
-                chaseFrequency = 15;
-                break;
-            case MazeGenerator.Difficulty.MEDIUM:
-                findSpeed = 15;
-                chaseSpeed = 12;
-                chaseFrequency = 10;
-                break;
-            case MazeGenerator.Difficulty.HARD:
-                findSpeed = 20;
-                chaseSpeed = 15;
-                chaseFrequency = 8;
-                break;
-        }
+
+        chaseFrequency = 10f;
+        chaseSpeed = PersistentData.enemyChaseSpeed;
+        findSpeed = PersistentData.enemySearchSpeed;
+
         speed = findSpeed;
         enemyControl = GetComponent<CharacterController>();
         positionVariability = 0.2f;
@@ -72,7 +59,7 @@ public class EnemyMovement : MonoBehaviour
         timeSinceBirdUp = 10f;
         moveCheck = 0;
         timeSinceBaKaw = 0;
-        baKawFrequency = 1.5f;
+        baKawFrequency = 5f;
         baKawOffset = Random.Range(0.5f, baKawFrequency);
         movePath = new Stack<Vector2Int>();
         lastPosition = new Vector2();
@@ -87,24 +74,12 @@ public class EnemyMovement : MonoBehaviour
         timeSinceBirdUp += Time.deltaTime;
         timeSinceBaKaw += Time.deltaTime;
 
-        if (moveCheck > 0.1f)
-        {
-            Vector2 curPos = new Vector2(transform.position.x, transform.position.z);
-            if (curPos == lastPosition)
-            {
-                Vector2Int curCell = WorldToMazePoint(curPos);
-                Vector2 newPos = MazeToWorldPoint(curCell);
-                //transform.position = new Vector3(newPos.x, transform.position.y, newPos.y);
-                NewChase("Random");
-            }
-            lastPosition = new Vector2(transform.position.x, transform.position.z);
-            moveCheck = 0;
-        }
-
         if (movePath.Count > 0)
         {
             FollowPath(ref nextPos);
         }
+        else
+            NewChase("Random");
 
         if (Vector3.Distance(transform.position, player.transform.position) < 3f)
         {
@@ -117,7 +92,7 @@ public class EnemyMovement : MonoBehaviour
         {
             baKaw.PlayOneShot(baKaw.clip);
             timeSinceBaKaw = 0;
-            baKawOffset = Random.Range(0.3f, 2f);
+            baKawOffset = Random.Range(baKawFrequency / 2f, baKawFrequency);
         }
     }
 
@@ -195,7 +170,7 @@ public class EnemyMovement : MonoBehaviour
 
             Vector3 movement = new Vector3(moveX, 0, moveZ);
             movement = Vector3.ClampMagnitude(movement, speed);
-            movement.y = Physics.gravity.y;
+            movement.y = 0;
 
             movement *= Time.deltaTime;
             movement = transform.TransformDirection(movement);
@@ -552,10 +527,18 @@ public class EnemyMovement : MonoBehaviour
                 timeSinceBirdUp = 0;
                 baKawFrequency = 0.75f;
             }
-            if (!buildUp.isPlaying)
-                buildUp.PlayOneShot(buildUp.clip);
+            buildUp.Play();
             speed = chaseSpeed;
             animator.SetInteger("animState", 3);
+            NewChase("Player");
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            baKawFrequency = 5f;
         }
     }
 }

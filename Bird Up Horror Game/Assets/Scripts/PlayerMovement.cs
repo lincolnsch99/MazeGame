@@ -93,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 movement = new Vector3(moveX, 0, moveZ);
 
         movement = Vector3.ClampMagnitude(movement, moveSpeed);
-        movement.y = Physics.gravity.y;
+        movement.y = 0;
 
         if (Mathf.Abs(movement.x) > 0 || Mathf.Abs(movement.z) > 0)
         {

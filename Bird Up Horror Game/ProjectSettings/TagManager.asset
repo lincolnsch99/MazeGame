@@ -11,6 +11,7 @@ TagManager:
   - Persistent
   - LoadScreen
   - LoadScreenSlider
+  - MainMenu
   layers:
   - Default
   - TransparentFX

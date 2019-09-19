@@ -7,12 +7,16 @@ using UnityEngine.SceneManagement;
 public class DontDestroy : MonoBehaviour
 {
     //Player Stats/Info
-    public List<float> scores;
+    public int mazesRan;
+    public int mazesEscaped;
+    public int rocksFound;
+    public int mazeNumRows;
+    public int mazeNumColumns;
+    public int numRocks;
+    public float enemyChaseSpeed;
+    public float enemySearchSpeed;
 
     private GameObject player, loadScreen;
-    private float saveTimer;
-    private int levelCount;
-    private string currentLevel;
     private Slider loadScreenProgress;
 
     private void Awake()
@@ -39,7 +43,6 @@ public class DontDestroy : MonoBehaviour
                 i = objects.Length;
             }
         }
-        saveTimer = 0;
     }
 
     private void OnEnable()
@@ -79,18 +82,6 @@ public class DontDestroy : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        saveTimer += Time.deltaTime;
-        if (saveTimer > 120F)
-        {
-            saveTimer = 0;
-            SaveStats();
-            Debug.Log("GameSaved");
-        }
-    }
-
     //Saves the current player stats in the local save file
     public void SaveStats()
     {
@@ -103,8 +94,14 @@ public class DontDestroy : MonoBehaviour
         try
         {
             GameData loadedData = SaveData.Load();
-
-            scores = loadedData.scores;
+            mazesRan = loadedData.mazesRan;
+            mazesEscaped = loadedData.mazesEscaped;
+            rocksFound = loadedData.rocksFound;
+            mazeNumRows = loadedData.mazeNumRows;
+            mazeNumColumns = loadedData.mazeNumColumns;
+            numRocks = loadedData.numRocks;
+            enemyChaseSpeed = loadedData.enemyChaseSpeed;
+            enemySearchSpeed = loadedData.enemySearchSpeed;
         }
         catch
         {
@@ -118,58 +115,24 @@ public class DontDestroy : MonoBehaviour
         try
         {
             GameData loadedData = SaveData.NewGame();
-            scores = loadedData.scores;
+            mazesRan = loadedData.mazesRan;
+            mazesEscaped = loadedData.mazesEscaped;
+            rocksFound = loadedData.rocksFound;
+            mazeNumRows = loadedData.mazeNumRows;
+            mazeNumColumns = loadedData.mazeNumColumns;
+            numRocks = loadedData.numRocks;
+            enemyChaseSpeed = loadedData.enemyChaseSpeed;
+            enemySearchSpeed = loadedData.enemySearchSpeed;
         }
         catch(UnityException e)
         {
             Debug.LogError("Error in loading new game");
-            Debug.LogError(e.ToString());
         }
-    }
-
-    //Sets levelCount back to 1
-    public void ResetLevel()
-    {
-        levelCount = 1;
-    }
-
-    //Increments the levelCount
-    public void IncrementLevel()
-    {
-        levelCount++;
-    }
-
-    //Sets the name of the current level
-    public void SetLevelName(string set)
-    {
-        currentLevel = set;
-    }
-
-    //Returns the level floor number, in corrent syntax. Ex:
-    // Level : 0
-    public string LevelToString()
-    {
-        if (currentLevel == "Camp")
-            return currentLevel;
-        return currentLevel + "\nLevel : " + levelCount.ToString();
-    }
-
-    //Returns the name of the current level
-    public string CurrentLevelName()
-    {
-        return currentLevel;
     }
 
     //Loads the desired scene
     public void LoadScene(string sceneName)
     {
-        if (currentLevel == sceneName)
-        {
-            IncrementLevel();
-        }
-        else
-            ResetLevel();
-        SetLevelName(sceneName);
         StartCoroutine(LoadSceneAsync(sceneName));
     }
 
@@ -216,6 +179,65 @@ public class DontDestroy : MonoBehaviour
     public void PlayGame()
     {
         LoadScene("Game");
+    }
+
+    public void SelectDifficulty()
+    {
+        GameObject.FindWithTag("MainMenu").transform.GetChild(0).gameObject.SetActive(false);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(1).gameObject.SetActive(true);
+    }
+
+    public void ToMainMenu()
+    {
+        if(SceneManager.GetActiveScene().name != "Menu")
+        {
+            LoadScene("Menu");
+        }
+        else
+        {
+            GameObject.FindWithTag("MainMenu").transform.GetChild(0).gameObject.SetActive(true);
+            GameObject.FindWithTag("MainMenu").transform.GetChild(1).gameObject.SetActive(false);
+        }
+    }
+
+    public void IncrementMazesRan()
+    {
+        mazesRan++;
+    }
+
+    public void IncrementMazesEscaped()
+    {
+        mazesEscaped++;
+    }
+
+    public void IncrementRocksFound()
+    {
+        rocksFound++;
+    }
+
+    public void SetNumRows(int set)
+    {
+        mazeNumRows = set;
+    }
+
+    public void SetNumColumns(int set)
+    {
+        mazeNumColumns = set;
+    }
+
+    public void SetNumRocks(int set)
+    {
+        numRocks = set;
+    }
+
+    public void SetChaseSpeed(float set)
+    {
+        enemyChaseSpeed = set;
+    }
+
+    public void SetSearchSpeed(float set)
+    {
+        enemySearchSpeed = set;
     }
 }
 
