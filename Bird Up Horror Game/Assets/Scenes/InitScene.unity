@@ -51,8 +51,8 @@ LightmapSettings:
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
-    m_EnableRealtimeLightmaps: 1
+    m_EnableBakedLightmaps: 0
+    m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 10
     m_Resolution: 2
@@ -157,9 +157,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mazesRan: 0
   mazesEscaped: 0
+  totalRocksFound: 0
   rocksFound: 0
   mazeNumRows: 0
   mazeNumColumns: 0
   numRocks: 0
   enemyChaseSpeed: 0
   enemySearchSpeed: 0
+  countdownTime: 0
+  PAUSED: 0
+  GameOverScreenPrefab: {fileID: 6392169054561331024, guid: a812cfc361cdfe34facc08c2fe038622,
+    type: 3}
+  GameWonScreenPrefab: {fileID: 1072719220646485309, guid: 1d00cb7c96a397b4c847ff49b9194a27,
+    type: 3}

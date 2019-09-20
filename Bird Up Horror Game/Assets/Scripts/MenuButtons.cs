@@ -17,8 +17,8 @@ public class MenuButtons : MonoBehaviour
             thisButton.onClick.AddListener(PersistentInfo.SaveStats);
         else if (ButtonType == "Load")
             thisButton.onClick.AddListener(PersistentInfo.LoadGame);
-        else if (ButtonType == "Reload")
-            thisButton.onClick.AddListener(this.ReloadScene);
+        else if (ButtonType == "Resume")
+            thisButton.onClick.AddListener(PersistentInfo.UnPauseGame);
         else if (ButtonType == "Menu")
             thisButton.onClick.AddListener(PersistentInfo.ToMainMenu);
         else if (ButtonType == "NewGame")
@@ -31,12 +31,6 @@ public class MenuButtons : MonoBehaviour
             thisButton.onClick.AddListener(PersistentInfo.SelectDifficulty);
         else if (ButtonType == "Play")
             thisButton.onClick.AddListener(PersistentInfo.PlayGame);
-    }
-
-    public void ReloadScene()
-    {
-        Scene scene = SceneManager.GetActiveScene();
-        PersistentInfo.LoadScene(scene.name);
     }
 
     public void LoadOptions()

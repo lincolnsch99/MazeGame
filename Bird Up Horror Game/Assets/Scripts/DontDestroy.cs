@@ -9,12 +9,21 @@ public class DontDestroy : MonoBehaviour
     //Player Stats/Info
     public int mazesRan;
     public int mazesEscaped;
+    public int totalRocksFound;
     public int rocksFound;
     public int mazeNumRows;
     public int mazeNumColumns;
     public int numRocks;
     public float enemyChaseSpeed;
     public float enemySearchSpeed;
+    public int countdownTime;
+
+    public bool PAUSED;
+
+    [SerializeField]
+    private GameObject GameOverScreenPrefab;
+    [SerializeField]
+    private GameObject GameWonScreenPrefab;
 
     private GameObject player, loadScreen;
     private Slider loadScreenProgress;
@@ -41,6 +50,22 @@ public class DontDestroy : MonoBehaviour
             {
                 loadScreenProgress = objects[i].GetComponent<Slider>();
                 i = objects.Length;
+            }
+        }
+        PAUSED = false;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (PAUSED)
+            {
+                UnPauseGame();
+            }
+            else
+            {
+                PauseGame();
             }
         }
     }
@@ -96,12 +121,14 @@ public class DontDestroy : MonoBehaviour
             GameData loadedData = SaveData.Load();
             mazesRan = loadedData.mazesRan;
             mazesEscaped = loadedData.mazesEscaped;
+            totalRocksFound = loadedData.totalRocksFound;
             rocksFound = loadedData.rocksFound;
             mazeNumRows = loadedData.mazeNumRows;
             mazeNumColumns = loadedData.mazeNumColumns;
             numRocks = loadedData.numRocks;
             enemyChaseSpeed = loadedData.enemyChaseSpeed;
             enemySearchSpeed = loadedData.enemySearchSpeed;
+            countdownTime = loadedData.countdownTime;
         }
         catch
         {
@@ -117,12 +144,14 @@ public class DontDestroy : MonoBehaviour
             GameData loadedData = SaveData.NewGame();
             mazesRan = loadedData.mazesRan;
             mazesEscaped = loadedData.mazesEscaped;
+            totalRocksFound = loadedData.totalRocksFound;
             rocksFound = loadedData.rocksFound;
             mazeNumRows = loadedData.mazeNumRows;
             mazeNumColumns = loadedData.mazeNumColumns;
             numRocks = loadedData.numRocks;
             enemyChaseSpeed = loadedData.enemyChaseSpeed;
             enemySearchSpeed = loadedData.enemySearchSpeed;
+            countdownTime = loadedData.countdownTime;
         }
         catch(UnityException e)
         {
@@ -133,6 +162,7 @@ public class DontDestroy : MonoBehaviour
     //Loads the desired scene
     public void LoadScene(string sceneName)
     {
+        UnPauseGame();
         StartCoroutine(LoadSceneAsync(sceneName));
     }
 
@@ -144,6 +174,7 @@ public class DontDestroy : MonoBehaviour
         Color temp = loadScreen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
         temp.a = 0F;
         loadScreen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = temp;
+        loadScreenProgress.gameObject.SetActive(false);
 
         while (loadScreen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color.a < 1.0F)
         {
@@ -155,8 +186,7 @@ public class DontDestroy : MonoBehaviour
             yield return null;
         }
 
-        loadScreen.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
-
+        loadScreenProgress.gameObject.SetActive(true);
 
         AsyncOperation operation =  SceneManager.LoadSceneAsync(sceneName);
         while(!operation.isDone)
@@ -178,6 +208,8 @@ public class DontDestroy : MonoBehaviour
 
     public void PlayGame()
     {
+        UnPauseGame();
+        rocksFound = 0;
         LoadScene("Game");
     }
 
@@ -191,6 +223,8 @@ public class DontDestroy : MonoBehaviour
     {
         if(SceneManager.GetActiveScene().name != "Menu")
         {
+            UnPauseGame();
+            Cursor.visible = true;
             LoadScene("Menu");
         }
         else
@@ -212,7 +246,10 @@ public class DontDestroy : MonoBehaviour
 
     public void IncrementRocksFound()
     {
+        totalRocksFound++;
         rocksFound++;
+        if (rocksFound >= numRocks)
+            GameWon();
     }
 
     public void SetNumRows(int set)
@@ -238,6 +275,94 @@ public class DontDestroy : MonoBehaviour
     public void SetSearchSpeed(float set)
     {
         enemySearchSpeed = set;
+    }
+
+    public void SetTimeLimit(int set)
+    {
+        countdownTime = set;
+    }
+
+    public void PauseGame()
+    {
+        PAUSED = true;
+        Time.timeScale = 0f;
+    }
+
+    public void UnPauseGame()
+    {
+        PAUSED = false;
+        Time.timeScale = 1f;
+    }
+
+    public void GameLost()
+    {
+        StartCoroutine(DisplayGameOver());
+    }
+
+    public void GameWon()
+    {
+        StartCoroutine(DisplayWon());
+    }
+
+    IEnumerator DisplayGameOver()
+    {
+        float timeElapsed = 0.0f;
+        GameObject screen = GameObject.Instantiate(GameOverScreenPrefab);
+        Color temp = screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
+        temp.a = 0F;
+        screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = temp;
+        screen.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+
+        while (screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color.a < 1.0F)
+        {
+            Color curTransparency = screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
+            curTransparency.a += (Time.deltaTime / 1F) / 1.0F;
+            if (curTransparency.a > 1.0F)
+                curTransparency.a = 1.0F;
+            screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = curTransparency;
+            yield return null;
+        }
+
+        screen.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+
+        while (timeElapsed < 3f)
+        {
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        IncrementMazesRan();
+        ToMainMenu();
+    }
+
+    IEnumerator DisplayWon()
+    {
+        float timeElapsed = 0.0f;
+        GameObject screen = GameObject.Instantiate(GameWonScreenPrefab);
+        Color temp = screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
+        temp.a = 0F;
+        screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = temp;
+        screen.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+
+        while (screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color.a < 1.0F)
+        {
+            Color curTransparency = screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
+            curTransparency.a += (Time.deltaTime / 1F) / 1.0F;
+            if (curTransparency.a > 1.0F)
+                curTransparency.a = 1.0F;
+            screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = curTransparency;
+            yield return null;
+        }
+
+        screen.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+
+        while (timeElapsed < 3f)
+        {
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        IncrementMazesRan();
+        IncrementMazesEscaped();
+        ToMainMenu();
     }
 }
 

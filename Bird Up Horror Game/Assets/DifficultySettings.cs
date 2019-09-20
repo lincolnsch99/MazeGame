@@ -10,6 +10,7 @@ public class DifficultySettings : MonoBehaviour
     public InputField chaseSpeedInput;
     public InputField searchSpeedInput;
     public InputField numRocksInput;
+    public InputField timeLimitInput;
     public GameObject InvalidInputMessage;
 
     private DontDestroy PersistentData;
@@ -30,8 +31,9 @@ public class DifficultySettings : MonoBehaviour
 
         if (value > 100)
             value = 100;
-        else if(value < 10)
+        else if (value < 10)
             value = 10;
+
 
         rowsInput.text = value.ToString();
         PersistentData.SetNumRows(value);
@@ -96,13 +98,30 @@ public class DifficultySettings : MonoBehaviour
         else
             int.TryParse(numRocksInput.text, out value);
 
-        if (value > 15)
-            value = 15;
-        else if (value < 3)
-            value = 3;
+        if (value > 10)
+            value = 10;
+        else if (value < 1)
+            value = 1;
 
         numRocksInput.text = value.ToString();
         PersistentData.SetNumRocks(value);
+    }
+
+    public void UpdateTimeLimit(int set = -1)
+    {
+        int value;
+        if (set != -1)
+            value = set;
+        else
+            int.TryParse(timeLimitInput.text, out value);
+
+        if (value > 600)
+            value = 600;
+        else if (value < 60)
+            value = 60;
+
+        timeLimitInput.text = value.ToString();
+        PersistentData.SetTimeLimit(value);
     }
 
     public void SetPremadeDifficulty(string difficulty)
@@ -115,6 +134,7 @@ public class DifficultySettings : MonoBehaviour
                 UpdateChaseSpeed(10);
                 UpdateSearchSpeed(5);
                 UpdateNumRocks(3);
+                UpdateTimeLimit(180);
                 break;
             case "Medium":
                 UpdateRows(25);
@@ -122,6 +142,7 @@ public class DifficultySettings : MonoBehaviour
                 UpdateChaseSpeed(15);
                 UpdateSearchSpeed(10);
                 UpdateNumRocks(5);
+                UpdateTimeLimit(300);
                 break;
             case "Hard":
                 UpdateRows(50);
@@ -129,6 +150,7 @@ public class DifficultySettings : MonoBehaviour
                 UpdateChaseSpeed(20);
                 UpdateSearchSpeed(15);
                 UpdateNumRocks(8);
+                UpdateTimeLimit(500);
                 break;
         }
     }
@@ -137,7 +159,7 @@ public class DifficultySettings : MonoBehaviour
     {
         if (PersistentData.mazeNumRows == 0 || PersistentData.mazeNumColumns == 0
             || PersistentData.numRocks == 0 || PersistentData.enemyChaseSpeed == 0
-            || PersistentData.enemySearchSpeed == 0)
+            || PersistentData.enemySearchSpeed == 0 || PersistentData.countdownTime == 0)
         {
             InvalidInputMessage.SetActive(true);
         }

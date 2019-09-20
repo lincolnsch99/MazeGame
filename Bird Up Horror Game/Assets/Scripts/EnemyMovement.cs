@@ -28,7 +28,6 @@ public class EnemyMovement : MonoBehaviour
     private PlayerMovement playerInfo;
     private float timeSinceChaseStart, timeSinceBirdUp, timeSinceBaKaw;
     private float moveCheck;
-    private Vector2 lastPosition;
     private Coroutine currentCoroutine;
     private float speed;
     private float chaseSpeed;
@@ -62,37 +61,39 @@ public class EnemyMovement : MonoBehaviour
         baKawFrequency = 5f;
         baKawOffset = Random.Range(0.5f, baKawFrequency);
         movePath = new Stack<Vector2Int>();
-        lastPosition = new Vector2();
         nextPos = new Vector2();
         animator.SetInteger("animState", 1);
     }
 
     private void Update()
     {
-        timeSinceChaseStart += Time.deltaTime;
-        moveCheck += Time.deltaTime;
-        timeSinceBirdUp += Time.deltaTime;
-        timeSinceBaKaw += Time.deltaTime;
-
-        if (movePath.Count > 0)
+        if (!PersistentData.PAUSED)
         {
-            FollowPath(ref nextPos);
-        }
-        else
-            NewChase("Random");
+            timeSinceChaseStart += Time.deltaTime;
+            moveCheck += Time.deltaTime;
+            timeSinceBirdUp += Time.deltaTime;
+            timeSinceBaKaw += Time.deltaTime;
 
-        if (Vector3.Distance(transform.position, player.transform.position) < 3f)
-        {
-            Destroy(this.gameObject);
-            PersistentData.LoadScene("Menu");
-            Cursor.visible = true;
-        }
+            if (movePath.Count > 0)
+            {
+                FollowPath(ref nextPos);
+            }
+            else
+                NewChase("Random");
 
-        if (timeSinceBaKaw > baKawOffset)
-        {
-            baKaw.PlayOneShot(baKaw.clip);
-            timeSinceBaKaw = 0;
-            baKawOffset = Random.Range(baKawFrequency / 2f, baKawFrequency);
+            if (Vector3.Distance(transform.position, player.transform.position) < 3f)
+            {
+                Destroy(this.gameObject);
+                PersistentData.GameLost();
+                Cursor.visible = true;
+            }
+
+            if (timeSinceBaKaw > baKawOffset)
+            {
+                baKaw.PlayOneShot(baKaw.clip);
+                timeSinceBaKaw = 0;
+                baKawOffset = Random.Range(baKawFrequency / 2f, baKawFrequency);
+            }
         }
     }
 
@@ -357,7 +358,10 @@ public class EnemyMovement : MonoBehaviour
                 else
                 {
                     path = Backtrack(grid, path);
-                    moveTo = path.Peek();
+                    if (path.Count > 0)
+                        moveTo = path.Peek();
+                    else
+                        moveTo = curCell;
                     validCell = true;
                 }
             }

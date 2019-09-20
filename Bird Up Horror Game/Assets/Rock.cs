@@ -18,31 +18,40 @@ public class Rock : MonoBehaviour
 
     private void Update()
     {
-        if(visible)
+        if (!PersistentData.PAUSED)
         {
-            bool playerIsClose = false;
-            Collider[] objectsHit = Physics.OverlapSphere(transform.position, 2.5f);
-            for(int i = 0; i < objectsHit.Length; i++)
+            if (visible)
             {
-                if (objectsHit[i].tag == "Player")
+                bool playerIsClose = false;
+                Collider[] objectsHit = Physics.OverlapSphere(transform.position, 2.5f);
+                for (int i = 0; i < objectsHit.Length; i++)
                 {
-                    playerIsClose = true;
-                    transform.GetChild(transform.childCount - 1).gameObject.SetActive(true);
+                    if (objectsHit[i].tag == "Player")
+                    {
+                        playerIsClose = true;
+                        transform.GetChild(transform.childCount - 1).gameObject.SetActive(true);
+                    }
+                }
+                if (!playerIsClose)
+                    transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
+                else
+                {
+                    if (Input.GetKeyDown(KeyCode.E))
+                    {
+                        PersistentData.IncrementRocksFound();
+                        this.gameObject.SetActive(false);
+                    }
                 }
             }
-            if(!playerIsClose)
-                transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
         }
     }
 
     private void OnBecameVisible()
     {
-        Debug.Log("Visible");
         visible = true;
     }
     private void OnBecameInvisible()
     {
-        Debug.Log("Not visible");
         visible = false;
         transform.GetChild(transform.childCount - 1).gameObject.SetActive(false);
     }

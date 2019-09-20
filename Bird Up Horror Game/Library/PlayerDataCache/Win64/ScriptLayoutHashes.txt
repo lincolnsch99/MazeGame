@@ -1,11 +1,12 @@
 Win64
 PlayerPath?
-C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Builds/Build0.2/Bird Up Horror Game.exe
+C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Builds/Build0.3/Bird Up Horror Game.exe
 SceneListBegin?
 Assets/Scenes/InitScene.unity
 Assets/Scenes/Menu.unity
 Assets/Scenes/Game.unity
 SceneListEnd?
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Rock
 984dcc0ba3707b7691fbdca8ff508d28 Unity.TextMeshPro.dll:TMPro.TMP_SelectionCaret
 01aa15e337e3a9c62f15153dfac6d589 Unity.TextMeshPro.dll:TMPro.TMP_Dropdown
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
@@ -87,8 +88,9 @@ fc108ce7d98c40ac0907e8ca7f500c76 UnityEngine.UI.dll:UnityEngine.UI.Text
 0fd6822f6177297bd0eb4d83cc7a9030 UnityEngine.UI.dll:UnityEngine.UI.ToggleGroup
 abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 64e54c0cbb0177c5ea26f340efb9ff85 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
+c14247e08ea47e00776dd113c80ece9c Assembly-CSharp.dll:.DifficultySettings
 48d8cb58ebc3de1a9191b4b71e0d08d2 Assembly-CSharp.dll:.CameraCollision
-695ab7f08f18935190623fec0e19236f Assembly-CSharp.dll:.DontDestroy
+28b1a56d658b5431b5cf6fc014dc018a Assembly-CSharp.dll:.DontDestroy
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 06f0fef534ca4c1d6064fd77a26bf722 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 780e8f682b3221346c034a6712a0fd25 UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
@@ -122,7 +124,7 @@ d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.Spa
 2696ca80e642baef16dbcbaaa292d938 Assembly-CSharp.dll:.AnimationControl
 94017dcc9f00fe671ea7dc427b4da011 Unity.TextMeshPro.dll:TMPro.TMP_SpriteAsset
 b3ab2106268377ffe25dd18ac23dca28 Unity.TextMeshPro.dll:TMPro.TMP_Asset
-c54e3602e2c6749a7fa927a1b8a23afe Assembly-CSharp.dll:.PlayerMovement
+ac497f0ddb2210a29a8648c45b595233 Assembly-CSharp.dll:.PlayerMovement
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.Analytics.Editor.dll:UnityEditor.Analytics.AnalyticsEventTrackerEditor
 71bb6a6b6c8f052f948db64c7dd3ca4f Unity.TextMeshPro.dll:TMPro.TMP_SpriteAnimator
 4fd8bf02e3089425d3502e26c44ba31a Unity.TextMeshPro.dll:TMPro.TextContainer
@@ -169,5 +171,5 @@ c116c8e01c6912503f7dead4a310c114 Assembly-CSharp.dll:.MazeGenerator
 c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
-a00d593303b74482837be172a77bc90e Assembly-CSharp.dll:.DifficultySettings
-71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Rock
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.RockDisplay
+70db8d98be1d0f0651f90de367076dda Assembly-CSharp.dll:.CountdownTimer

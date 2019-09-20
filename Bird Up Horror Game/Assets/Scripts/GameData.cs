@@ -11,6 +11,8 @@ public class GameData
     [SerializeField]
     public int mazesEscaped;
     [SerializeField]
+    public int totalRocksFound;
+    [SerializeField]
     public int rocksFound;
     [SerializeField]
     public int mazeNumRows;
@@ -22,23 +24,28 @@ public class GameData
     public float enemyChaseSpeed;
     [SerializeField]
     public float enemySearchSpeed;
+    [SerializeField]
+    public int countdownTime;
 
     public GameData(DontDestroy info)
     {
         mazesRan = info.mazesRan;
         mazesEscaped = info.mazesEscaped;
+        totalRocksFound = info.totalRocksFound;
         rocksFound = info.rocksFound;
         mazeNumRows = info.mazeNumRows;
         mazeNumColumns = info.mazeNumColumns;
         numRocks = info.numRocks;
         enemyChaseSpeed = info.enemyChaseSpeed;
         enemySearchSpeed = info.enemySearchSpeed;
+        countdownTime = info.countdownTime;
     }
 
     public GameData()
     {
         mazesRan = 0;
         mazesEscaped = 0;
+        totalRocksFound = 0;
         rocksFound = 0;
         mazeNumRows = 0;
         mazeNumColumns = 0;

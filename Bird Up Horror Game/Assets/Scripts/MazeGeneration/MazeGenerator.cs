@@ -72,6 +72,7 @@ public class MazeGenerator : MonoBehaviour
                     grid[i, j].northWall.name = "NorthWall: " + i + " , " + j;
                 }
 
+                
                 // Offsetting the scale of every other row/column to keep the walls from causing visual glitches by overlapping each other
                 if(i % 2 == 0)
                 {
