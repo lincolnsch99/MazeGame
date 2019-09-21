@@ -52,7 +52,9 @@ public static class SaveData
         }
         else
         {
-            Debug.LogError("Save file not found");
+            Debug.LogError("Save file not found, loading new game file.");
+            CreateNewGameFile();
+            NewGame();
             return null;
         }
     }

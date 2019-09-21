@@ -6,10 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class DontDestroy : MonoBehaviour
 {
-    //Player Stats/Info
+    // Player Stats/Info (These are stored in save file)
     public int mazesRan;
     public int mazesEscaped;
     public int totalRocksFound;
+    public float mouseSensX;
+    public float mouseSensY;
+    public float volume;
+
+
+
+    // Game Stats/Info
     public int rocksFound;
     public int mazeNumRows;
     public int mazeNumColumns;
@@ -17,7 +24,6 @@ public class DontDestroy : MonoBehaviour
     public float enemyChaseSpeed;
     public float enemySearchSpeed;
     public int countdownTime;
-
     public bool PAUSED;
 
     [SerializeField]
@@ -27,10 +33,16 @@ public class DontDestroy : MonoBehaviour
 
     private GameObject player, loadScreen;
     private Slider loadScreenProgress;
+    private bool routineRunning;
+
+    private void Start()
+    {
+        LoadGame();
+        routineRunning = false;
+    }
 
     private void Awake()
     {
-        SaveData.CreateNewGameFile();
         DontDestroyOnLoad(this.gameObject);
         if (SceneManager.GetActiveScene().buildIndex == 0)
             SceneManager.LoadScene("Menu");
@@ -107,13 +119,13 @@ public class DontDestroy : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    //Saves the current player stats in the local save file
+    // Saves the current player stats in the local save file
     public void SaveStats()
     {
         SaveData.Save(this);
     }
 
-    //Loads the stats from the save file, if found
+    // Loads the stats from the save file, if found
     public void LoadGame()
     {
         try
@@ -122,13 +134,9 @@ public class DontDestroy : MonoBehaviour
             mazesRan = loadedData.mazesRan;
             mazesEscaped = loadedData.mazesEscaped;
             totalRocksFound = loadedData.totalRocksFound;
-            rocksFound = loadedData.rocksFound;
-            mazeNumRows = loadedData.mazeNumRows;
-            mazeNumColumns = loadedData.mazeNumColumns;
-            numRocks = loadedData.numRocks;
-            enemyChaseSpeed = loadedData.enemyChaseSpeed;
-            enemySearchSpeed = loadedData.enemySearchSpeed;
-            countdownTime = loadedData.countdownTime;
+            mouseSensX = loadedData.mouseSensX;
+            mouseSensY = loadedData.mouseSensY;
+            volume = loadedData.volume;
         }
         catch
         {
@@ -136,7 +144,7 @@ public class DontDestroy : MonoBehaviour
         }
     }
 
-    //Sets stats and values to a New Game status, using a stored "New Game" file
+    // Sets stats and values to a New Game status, using a stored "New Game" file
     public void NewGame()
     {
         try
@@ -145,13 +153,9 @@ public class DontDestroy : MonoBehaviour
             mazesRan = loadedData.mazesRan;
             mazesEscaped = loadedData.mazesEscaped;
             totalRocksFound = loadedData.totalRocksFound;
-            rocksFound = loadedData.rocksFound;
-            mazeNumRows = loadedData.mazeNumRows;
-            mazeNumColumns = loadedData.mazeNumColumns;
-            numRocks = loadedData.numRocks;
-            enemyChaseSpeed = loadedData.enemyChaseSpeed;
-            enemySearchSpeed = loadedData.enemySearchSpeed;
-            countdownTime = loadedData.countdownTime;
+            mouseSensX = loadedData.mouseSensX;
+            mouseSensY = loadedData.mouseSensY;
+            volume = loadedData.volume;
         }
         catch(UnityException e)
         {
@@ -159,16 +163,18 @@ public class DontDestroy : MonoBehaviour
         }
     }
 
-    //Loads the desired scene
+    // Loads the desired scene
     public void LoadScene(string sceneName)
     {
-        UnPauseGame();
+        PAUSED = false;
+        Time.timeScale = 1f;
         StartCoroutine(LoadSceneAsync(sceneName));
     }
 
-    //Handles the fade in and such with the loading screen
+    // Handles the fade in and such with the loading screen
     IEnumerator LoadSceneAsync(string sceneName)
     {
+        routineRunning = true;
         if (loadScreen != null)
             loadScreen.SetActive(true);
         Color temp = loadScreen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
@@ -198,6 +204,7 @@ public class DontDestroy : MonoBehaviour
         }
         if(player != null)
             player.transform.position = new Vector3(0f, 0F, 0F);
+        routineRunning = false;
     }
 
     public void QuitGame()
@@ -217,6 +224,24 @@ public class DontDestroy : MonoBehaviour
     {
         GameObject.FindWithTag("MainMenu").transform.GetChild(0).gameObject.SetActive(false);
         GameObject.FindWithTag("MainMenu").transform.GetChild(1).gameObject.SetActive(true);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(2).gameObject.SetActive(false);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(3).gameObject.SetActive(false);
+    }
+
+    public void SelectOptions()
+    {
+        GameObject.FindWithTag("MainMenu").transform.GetChild(0).gameObject.SetActive(false);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(1).gameObject.SetActive(false);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(2).gameObject.SetActive(true);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(3).gameObject.SetActive(false);
+    }
+
+    public void SelectTutorial()
+    {
+        GameObject.FindWithTag("MainMenu").transform.GetChild(0).gameObject.SetActive(false);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(1).gameObject.SetActive(false);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(2).gameObject.SetActive(false);
+        GameObject.FindWithTag("MainMenu").transform.GetChild(3).gameObject.SetActive(true);
     }
 
     public void ToMainMenu()
@@ -231,6 +256,8 @@ public class DontDestroy : MonoBehaviour
         {
             GameObject.FindWithTag("MainMenu").transform.GetChild(0).gameObject.SetActive(true);
             GameObject.FindWithTag("MainMenu").transform.GetChild(1).gameObject.SetActive(false);
+            GameObject.FindWithTag("MainMenu").transform.GetChild(2).gameObject.SetActive(false);
+            GameObject.FindWithTag("MainMenu").transform.GetChild(3).gameObject.SetActive(false);
         }
     }
 
@@ -285,18 +312,21 @@ public class DontDestroy : MonoBehaviour
     public void PauseGame()
     {
         PAUSED = true;
+        Cursor.visible = true;
         Time.timeScale = 0f;
     }
 
     public void UnPauseGame()
     {
         PAUSED = false;
+        Cursor.visible = false;
         Time.timeScale = 1f;
     }
 
     public void GameLost()
     {
-        StartCoroutine(DisplayGameOver());
+        if(!routineRunning)
+            StartCoroutine(DisplayGameOver());
     }
 
     public void GameWon()
@@ -306,6 +336,9 @@ public class DontDestroy : MonoBehaviour
 
     IEnumerator DisplayGameOver()
     {
+        routineRunning = true;
+        PAUSED = false;
+        Time.timeScale = 1f;
         float timeElapsed = 0.0f;
         GameObject screen = GameObject.Instantiate(GameOverScreenPrefab);
         Color temp = screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
@@ -332,10 +365,14 @@ public class DontDestroy : MonoBehaviour
         }
         IncrementMazesRan();
         ToMainMenu();
+        routineRunning = false;
     }
 
     IEnumerator DisplayWon()
     {
+        routineRunning = true;
+        PAUSED = false;
+        Time.timeScale = 1f;
         float timeElapsed = 0.0f;
         GameObject screen = GameObject.Instantiate(GameWonScreenPrefab);
         Color temp = screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
@@ -363,6 +400,12 @@ public class DontDestroy : MonoBehaviour
         IncrementMazesRan();
         IncrementMazesEscaped();
         ToMainMenu();
+        routineRunning = false;
+    }
+
+    public void Click()
+    {
+        GetComponent<AudioSource>().Play();
     }
 }
 

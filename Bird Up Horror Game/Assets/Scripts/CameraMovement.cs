@@ -24,6 +24,8 @@ public class CameraMovement : MonoBehaviour
     private void Awake()
     {
         PersistentData = GameObject.FindWithTag("Persistent").GetComponent<DontDestroy>();
+        sensitivityH = PersistentData.mouseSensX;
+        sensitivityV = PersistentData.mouseSensY;
     }
 
     // Update is called once per frame

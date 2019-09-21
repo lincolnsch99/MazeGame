@@ -10,6 +10,8 @@ public class EnemyMovement : MonoBehaviour
     private AudioSource buildUp;
     [SerializeField]
     private AudioSource baKaw;
+    [SerializeField]
+    private Animator animControl;
     public enum Direction
     {
         NORTH,
@@ -28,6 +30,7 @@ public class EnemyMovement : MonoBehaviour
     private PlayerMovement playerInfo;
     private float timeSinceChaseStart, timeSinceBirdUp, timeSinceBaKaw;
     private float moveCheck;
+    private bool moving;
     private Coroutine currentCoroutine;
     private float speed;
     private float chaseSpeed;
@@ -35,7 +38,6 @@ public class EnemyMovement : MonoBehaviour
     private float chaseFrequency;
 
     private float baKawOffset, baKawFrequency;
-    private Animator animator;
 
     private DontDestroy PersistentData;
 
@@ -45,7 +47,6 @@ public class EnemyMovement : MonoBehaviour
         mazeInfo = GameObject.FindWithTag("Maze").GetComponent<MazeGenerator>();
         player = GameObject.FindWithTag("Player");
         playerInfo = player.GetComponent<PlayerMovement>();
-        animator = transform.GetChild(0).GetComponent<Animator>();
 
         chaseFrequency = 10f;
         chaseSpeed = PersistentData.enemyChaseSpeed;
@@ -62,7 +63,6 @@ public class EnemyMovement : MonoBehaviour
         baKawOffset = Random.Range(0.5f, baKawFrequency);
         movePath = new Stack<Vector2Int>();
         nextPos = new Vector2();
-        animator.SetInteger("animState", 1);
     }
 
     private void Update()
@@ -83,7 +83,6 @@ public class EnemyMovement : MonoBehaviour
 
             if (Vector3.Distance(transform.position, player.transform.position) < 3f)
             {
-                Destroy(this.gameObject);
                 PersistentData.GameLost();
                 Cursor.visible = true;
             }
@@ -94,6 +93,11 @@ public class EnemyMovement : MonoBehaviour
                 timeSinceBaKaw = 0;
                 baKawOffset = Random.Range(baKawFrequency / 2f, baKawFrequency);
             }
+
+            if(moving)
+            {
+                animControl.SetBool("moving", true);
+            }
         }
     }
 
@@ -101,7 +105,6 @@ public class EnemyMovement : MonoBehaviour
     {
         ResetGrid();
         movePath.Clear();
-        Debug.Log("New Chase");
 
         if (type.Equals("Random"))
         {
@@ -131,12 +134,15 @@ public class EnemyMovement : MonoBehaviour
 
     private bool moveTo(Vector2 pos)
     {
+        
         if (Mathf.Abs(transform.position.x - pos.x) < positionVariability && Mathf.Abs(transform.position.z - pos.y) < positionVariability)
         {
+            moving = false;
             return true;
         }
         else
         {
+            moving = true;
             float moveX = 0, moveZ = 0;
             float rotY = 0;
             if (Mathf.Abs(transform.position.x - pos.x) < positionVariability)
@@ -176,7 +182,7 @@ public class EnemyMovement : MonoBehaviour
             movement *= Time.deltaTime;
             movement = transform.TransformDirection(movement);
             enemyControl.Move(movement);
-            transform.GetChild(0).localEulerAngles = Vector3.RotateTowards(transform.localEulerAngles, new Vector3(0, rotY, 0), 0.1f, 360f);
+            transform.GetChild(transform.childCount - 1).localEulerAngles = Vector3.RotateTowards(transform.localEulerAngles, new Vector3(0, rotY, 0), 0.1f, 360f);
             return false;
         }
     }
@@ -528,12 +534,12 @@ public class EnemyMovement : MonoBehaviour
             if (timeSinceBirdUp > 3f)
             {
                 birdUp.PlayOneShot(birdUp.clip);
+                buildUp.Play();
                 timeSinceBirdUp = 0;
                 baKawFrequency = 0.75f;
             }
-            buildUp.Play();
             speed = chaseSpeed;
-            animator.SetInteger("animState", 3);
+            animControl.SetFloat("animSpeed", 2.0f);
             NewChase("Player");
         }
     }
@@ -542,6 +548,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
+            animControl.SetFloat("animSpeed", 1.5f);
             baKawFrequency = 5f;
         }
     }

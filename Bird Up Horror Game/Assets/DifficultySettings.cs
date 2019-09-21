@@ -126,6 +126,7 @@ public class DifficultySettings : MonoBehaviour
 
     public void SetPremadeDifficulty(string difficulty)
     {
+        PersistentData.Click();
         switch (difficulty)
         {
             case "Easy":
@@ -157,6 +158,7 @@ public class DifficultySettings : MonoBehaviour
 
     public void TryPlay()
     {
+        PersistentData.Click();
         if (PersistentData.mazeNumRows == 0 || PersistentData.mazeNumColumns == 0
             || PersistentData.numRocks == 0 || PersistentData.enemyChaseSpeed == 0
             || PersistentData.enemySearchSpeed == 0 || PersistentData.countdownTime == 0)

@@ -63,6 +63,7 @@
     <Compile Include="Assets\CameraCollision.cs" />
     <Compile Include="Assets\CountdownTimer.cs" />
     <Compile Include="Assets\DifficultySettings.cs" />
+    <Compile Include="Assets\OptionsSettings.cs" />
     <Compile Include="Assets\Rock.cs" />
     <Compile Include="Assets\RockDisplay.cs" />
     <Compile Include="Assets\Scripts\Activations.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\SaveData.cs" />
     <Compile Include="Assets\Scripts\Vector.cs" />
+    <Compile Include="Assets\SliderValueDisplay.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
