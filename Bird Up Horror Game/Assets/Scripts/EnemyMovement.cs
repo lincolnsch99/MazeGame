@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    public bool playerDead;
+
     [SerializeField]
     private AudioSource birdUp;
     [SerializeField]
     private AudioSource buildUp;
     [SerializeField]
     private AudioSource baKaw;
+    [SerializeField]
+    private AudioSource deathSound;
     [SerializeField]
     private Animator animControl;
     public enum Direction
@@ -36,6 +40,7 @@ public class EnemyMovement : MonoBehaviour
     private float chaseSpeed;
     private float findSpeed;
     private float chaseFrequency;
+    
 
     private float baKawOffset, baKawFrequency;
 
@@ -63,11 +68,12 @@ public class EnemyMovement : MonoBehaviour
         baKawOffset = Random.Range(0.5f, baKawFrequency);
         movePath = new Stack<Vector2Int>();
         nextPos = new Vector2();
+        playerDead = false;
     }
 
     private void Update()
     {
-        if (!PersistentData.PAUSED)
+        if (!PersistentData.PAUSED && !playerDead)
         {
             timeSinceChaseStart += Time.deltaTime;
             moveCheck += Time.deltaTime;
@@ -83,6 +89,15 @@ public class EnemyMovement : MonoBehaviour
 
             if (Vector3.Distance(transform.position, player.transform.position) < 3f)
             {
+                playerDead = true;
+                AudioSource[] allAudio = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
+                for(int i = 0; i < allAudio.Length; i++)
+                {
+                    allAudio[i].Stop();
+                }
+                animControl.SetBool("moving", false);
+                moving = false;
+                deathSound.Play();
                 PersistentData.GameLost();
                 Cursor.visible = true;
             }

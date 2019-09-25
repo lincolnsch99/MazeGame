@@ -1,6 +1,6 @@
 Win64
 PlayerPath?
-C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Builds/Build1.0/Bird Up Horror Game.exe
+C:/Users/Link the Exalted/Desktop/BirdUp/BirdUp_Update1.1/BirdUp.exe
 SceneListBegin?
 Assets/Scenes/InitScene.unity
 Assets/Scenes/Menu.unity
@@ -56,8 +56,6 @@ fc108ce7d98c40ac0907e8ca7f500c76 UnityEngine.UI.dll:UnityEngine.UI.Text
 abf1930d8126d0b2e00e9449129a0190 UnityEngine.UI.dll:UnityEngine.EventSystems.TouchInputModule
 64e54c0cbb0177c5ea26f340efb9ff85 UnityEngine.UI.dll:UnityEngine.UI.VerticalLayoutGroup
 98ad81e9f689a492509f07e75b810aaa Unity.TextMeshPro.dll:TMPro.TMP_InputField
-71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
-71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 cf9f5cf2c3145a37ac07f00e50e460f9 UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 5fc094978ce3e3591a7500ed380d854a UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -167,13 +165,12 @@ a4f0a4f62100f1a4fb5cbe0e00dde83f Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 5fc094978ce3e3591a7500ed380d854a Unity.Analytics.DataPrivacy.dll:UnityEngine.Analytics.DataPrivacyButton
 70db8d98be1d0f0651f90de367076dda Assembly-CSharp.dll:.CountdownTimer
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
-ecf724eb364da85418f14c5609417bba Assembly-CSharp.dll:.EnemyController
-0b31055edc2e7263cc4a9547a22d318f Assembly-CSharp.dll:.EnemyMovement
+b16e6c5e1bb7888c1b9379136e750080 Assembly-CSharp.dll:.EnemyMovement
 d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
-6b750419d822dfb27922aee232cbbc2f Assembly-CSharp.dll:.Manager
 c116c8e01c6912503f7dead4a310c114 Assembly-CSharp.dll:.MazeGenerator
 c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.RockDisplay
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 8b5dc68ce5549808f2288603311e87ab Assembly-CSharp.dll:.OptionsSettings
+71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.PlayerStatsDisplay

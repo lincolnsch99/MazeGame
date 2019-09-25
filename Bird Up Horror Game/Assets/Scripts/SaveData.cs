@@ -45,7 +45,6 @@ public static class SaveData
         {
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream stream = new FileStream(saveFilePath, FileMode.Open);
-
             GameData data = formatter.Deserialize(stream) as GameData;
             stream.Close();
             return data;

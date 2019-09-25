@@ -39,6 +39,7 @@ public class Rock : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.E))
                     {
                         PersistentData.IncrementRocksFound();
+                        GetComponent<AudioSource>().PlayOneShot(GetComponent<AudioSource>().clip);
                         this.gameObject.SetActive(false);
                     }
                 }

@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PersistentData.PAUSED)
+        if (!PersistentData.PAUSED && !enemy.GetComponent<EnemyMovement>().playerDead)
         {
             if (pauseScreen.activeSelf)
                 pauseScreen.SetActive(false);
@@ -155,7 +155,7 @@ public class PlayerMovement : MonoBehaviour
                 timeSinceFootstep = 0;
             }
         }
-        else
+        else if(PersistentData.PAUSED)
         {
             if (!pauseScreen.activeSelf)
                 pauseScreen.SetActive(true);

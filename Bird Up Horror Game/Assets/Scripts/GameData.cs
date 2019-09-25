@@ -34,8 +34,8 @@ public class GameData
         mazesRan = 0;
         mazesEscaped = 0;
         totalRocksFound = 0;
-        mouseSensX = 5f;
-        mouseSensX = 5f;
+        mouseSensX = 8f;
+        mouseSensX = 8f;
         volume = 1f;
     }
 }

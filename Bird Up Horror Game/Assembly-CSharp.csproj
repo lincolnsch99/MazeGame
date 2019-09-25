@@ -66,22 +66,17 @@
     <Compile Include="Assets\OptionsSettings.cs" />
     <Compile Include="Assets\Rock.cs" />
     <Compile Include="Assets\RockDisplay.cs" />
-    <Compile Include="Assets\Scripts\Activations.cs" />
     <Compile Include="Assets\Scripts\AnimationControl.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\DontDestroy.cs" />
-    <Compile Include="Assets\Scripts\EnemyController.cs" />
     <Compile Include="Assets\Scripts\EnemyMovement.cs" />
     <Compile Include="Assets\Scripts\GameData.cs" />
-    <Compile Include="Assets\Scripts\Layer.cs" />
-    <Compile Include="Assets\Scripts\Manager.cs" />
     <Compile Include="Assets\Scripts\MazeGeneration\MazeGenerator.cs" />
     <Compile Include="Assets\Scripts\MazeGeneration\SingleSpace.cs" />
     <Compile Include="Assets\Scripts\MenuButtons.cs" />
-    <Compile Include="Assets\Scripts\NeuralNetwork.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\Scripts\PlayerStatsDisplay.cs" />
     <Compile Include="Assets\Scripts\SaveData.cs" />
-    <Compile Include="Assets\Scripts\Vector.cs" />
     <Compile Include="Assets\SliderValueDisplay.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Link the Exalted/Desktop/UnityMazeGame/MazeGame/Bird Up Horror Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

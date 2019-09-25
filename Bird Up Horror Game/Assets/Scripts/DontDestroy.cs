@@ -331,7 +331,8 @@ public class DontDestroy : MonoBehaviour
 
     public void GameWon()
     {
-        StartCoroutine(DisplayWon());
+        if(!routineRunning)
+            StartCoroutine(DisplayWon());
     }
 
     IEnumerator DisplayGameOver()
@@ -349,10 +350,11 @@ public class DontDestroy : MonoBehaviour
         while (screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color.a < 1.0F)
         {
             Color curTransparency = screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
-            curTransparency.a += (Time.deltaTime / 1F) / 1.0F;
+            curTransparency.a += (Time.deltaTime / 1F) / 4.5F;
             if (curTransparency.a > 1.0F)
                 curTransparency.a = 1.0F;
             screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = curTransparency;
+            
             yield return null;
         }
 
@@ -364,8 +366,8 @@ public class DontDestroy : MonoBehaviour
             yield return null;
         }
         IncrementMazesRan();
-        ToMainMenu();
         routineRunning = false;
+        ToMainMenu();
     }
 
     IEnumerator DisplayWon()
@@ -383,7 +385,7 @@ public class DontDestroy : MonoBehaviour
         while (screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color.a < 1.0F)
         {
             Color curTransparency = screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color;
-            curTransparency.a += (Time.deltaTime / 1F) / 1.0F;
+            curTransparency.a += (Time.deltaTime / 1F) / 3.0F;
             if (curTransparency.a > 1.0F)
                 curTransparency.a = 1.0F;
             screen.transform.GetChild(0).GetChild(0).GetComponent<Image>().color = curTransparency;
@@ -399,8 +401,8 @@ public class DontDestroy : MonoBehaviour
         }
         IncrementMazesRan();
         IncrementMazesEscaped();
-        ToMainMenu();
         routineRunning = false;
+        ToMainMenu();
     }
 
     public void Click()
